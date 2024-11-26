@@ -12,11 +12,11 @@ import axios from "axios";
 import { DataTable } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
 
-const BACKEND_URL = "http://SEU_BACKEND/api"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://768c-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
 
 export default function App() {
   const [targetDist, setTargetDist] = useState(""); // Estado para o limite
-  const [sensorData, setSensorData] = useState<{ timestamp: string; distance: number }[]>([]); // Estado para dados do sensor
+  const [sensorData, setSensorData] = useState<{ horario: string; valor: number }[]>([]); // Estado para dados do sensor
   const [chartData, setChartData] = useState<{
     labels: string[];
     datasets: { data: number[]; strokeWidth: number }[];
@@ -28,7 +28,9 @@ export default function App() {
   // Função para buscar os dados do sensor do backend
   const fetchSensorData = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/sensor-data`);
+
+      const response = await axios.get(`${BACKEND_URL}/Logging`);
+      alert(response.data)
       setSensorData(response.data); // Assumindo que o backend retorna um array de objetos
       formatChartData(response.data);
     } catch (error) {
@@ -38,15 +40,15 @@ export default function App() {
   };
 
   // Função para formatar dados do sensor para o gráfico
-  const formatChartData = (data: { timestamp: string; distance: number }[]) => {
-    const timestamps = data.map((item) => item.timestamp);
-    const distances = data.map((item) => item.distance);
+  const formatChartData = (data: { horario: string; valor: number }[]) => {
+    const horarios = data.map((item) => item.horario);
+    const valores = data.map((item) => item.valor);
 
     setChartData({
-      labels: timestamps.slice(-5), // Mostra os últimos 5 timestamps no eixo X
+      labels: horarios.slice(-5), // Mostra os últimos 5 timestamps no eixo X
       datasets: [
         {
-          data: distances,
+          data: valores,
           strokeWidth: 2, // Espessura da linha
         },
       ],
@@ -56,11 +58,10 @@ export default function App() {
   // Função para atualizar o valor limite no backend
   const updateTargetDist = async () => {
     try {
-      await axios.post(`${BACKEND_URL}/update-target`, {
-        targetDist: Number(targetDist),
+      await axios.patch(`${BACKEND_URL}/Controle`, {
+        distancia: Number(targetDist),
       });
       alert("Valor limite atualizado com sucesso!");
-      setTargetDist("");
     } catch (error) {
       console.error("Erro ao atualizar valor limite:", error);
       alert("Erro ao atualizar valor limite.");
@@ -69,7 +70,7 @@ export default function App() {
 
   // Busca os dados ao montar o componente
   useEffect(() => {
-    //fetchSensorData();
+    fetchSensorData();
   }, []);
 
   return (
@@ -99,14 +100,14 @@ export default function App() {
 
         {sensorData.map((item, index) => (
           <DataTable.Row key={index}>
-            <DataTable.Cell>{item.timestamp}</DataTable.Cell>
-            <DataTable.Cell>{item.distance} cm</DataTable.Cell>
+            <DataTable.Cell>{item.horario}</DataTable.Cell>
+            <DataTable.Cell>{item.valor} cm</DataTable.Cell>
           </DataTable.Row>
         ))}
       </DataTable>
 
       {/* Gráfico para exibir os valores ao longo do tempo */}
-      <Text style={styles.subHeader}>Gráfico de Distância</Text>
+      <Text style={styles.subHeader}>Gráfico de Distância</Text> {/*
       {chartData.labels && (
         <LineChart
           data={chartData}
@@ -130,7 +131,7 @@ export default function App() {
             borderRadius: 16,
           }}
         />
-      )}
+      )}*/}
     </ScrollView>
   );
 }

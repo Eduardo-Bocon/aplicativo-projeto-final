@@ -4,7 +4,7 @@ import axios from "axios";
 import { DataTable } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
 
-const BACKEND_URL = "http://SEU_BACKEND/api"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://768c-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
 
 export default function Explore() {
   const [sensorData, setSensorData] = useState<{ timestamp: string; distance: number }[]>([]);
@@ -19,7 +19,7 @@ export default function Explore() {
   // Busca dados do sensor
   const fetchSensorData = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/sensor-data`);
+      const response = await axios.get(`${BACKEND_URL}/Logging`);
       setSensorData(response.data);
       formatChartData(response.data);
     } catch (error) {
@@ -32,6 +32,12 @@ export default function Explore() {
     const timestamps = data.map((item) => item.timestamp);
     const distances = data.map((item) => item.distance);
 
+    if (distances.some((d) => !isFinite(d))){
+      console.error("Dados invalidos!", distances);
+      alert("Erro ao carregar os dados do grafico");
+      return;
+    }
+
     setChartData({
       labels: timestamps.slice(-5),
       datasets: [{ data: distances, strokeWidth: 2 }],
@@ -42,8 +48,8 @@ export default function Explore() {
     fetchSensorData();
   }, []);
 
-  return (
-    <ScrollView style={styles.container}>
+  return ( 
+    <ScrollView style={styles.container}> {/*
       <Text style={styles.subHeader}>Valores do Sensor</Text>
       <DataTable>
         <DataTable.Header>
@@ -76,7 +82,7 @@ export default function Explore() {
           bezier
           style={{ marginVertical: 8, borderRadius: 16 }}
         />
-      )}
+      )}*/}
     </ScrollView>
   );
 }
