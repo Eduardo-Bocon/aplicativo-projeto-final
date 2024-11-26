@@ -30,7 +30,7 @@ export default function App() {
     try {
 
       const response = await axios.get(`${BACKEND_URL}/Logging`);
-      alert(response.data)
+      
       setSensorData(response.data); // Assumindo que o backend retorna um array de objetos
       formatChartData(response.data);
     } catch (error) {
