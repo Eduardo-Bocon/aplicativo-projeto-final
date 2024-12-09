@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
 
-const BACKEND_URL = "https://768c-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://b43b-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
 
 export default function Index() {
   const [targetDist, setTargetDist] = useState(""); // Estado para o limite
@@ -21,13 +21,13 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>{/*
+    <View style={styles.container}>
       <Text style={styles.header}>Controle de Sensor</Text>
       <View style={styles.card}>
         <Text style={styles.label}>Alterar valor limite:</Text>
         <TextInput style={styles.input} placeholder="Novo limite" />
                   <Button title="Atualizar" onPress={updateTargetDist} />
-                </View>*/}
+                </View>
               </View>
             );
           }

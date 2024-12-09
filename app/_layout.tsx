@@ -12,7 +12,7 @@ import axios from "axios";
 import { DataTable } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
 
-const BACKEND_URL = "https://768c-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://b43b-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
 
 export default function App() {
   const [targetDist, setTargetDist] = useState(""); // Estado para o limite
@@ -70,7 +70,10 @@ export default function App() {
 
   // Busca os dados ao montar o componente
   useEffect(() => {
-    fetchSensorData();
+    fetchSensorData(); // Busca inicial
+    const interval = setInterval(fetchSensorData, 1000); // Atualiza a cada 5 segundos
+
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
   }, []);
 
   return (
@@ -92,25 +95,32 @@ export default function App() {
 
       {/* Tabela para exibir os dados antigos do sensor */}
       <Text style={styles.subHeader}>Valores do Sensor</Text>
-      <DataTable>
-        <DataTable.Header>
-          <DataTable.Title>Horário</DataTable.Title>
-          <DataTable.Title>Distância</DataTable.Title>
-        </DataTable.Header>
+      <View  style={{height: 200}}>
+        <ScrollView>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Horário</DataTable.Title>
+              <DataTable.Title>Distância</DataTable.Title>
+            </DataTable.Header>
 
-        {sensorData.map((item, index) => (
-          <DataTable.Row key={index}>
-            <DataTable.Cell>{item.horario}</DataTable.Cell>
-            <DataTable.Cell>{item.valor} cm</DataTable.Cell>
-          </DataTable.Row>
-        ))}
-      </DataTable>
+            {sensorData.map((item, index) => (
+              <DataTable.Row key={index}>
+                <DataTable.Cell>{item.horario}</DataTable.Cell>
+                <DataTable.Cell>{item.valor} cm</DataTable.Cell>
+              </DataTable.Row>
+            ))}
+          </DataTable>
+        </ScrollView>
+      </View>
+      
+      
 
       {/* Gráfico para exibir os valores ao longo do tempo */}
-      <Text style={styles.subHeader}>Gráfico de Distância</Text> {/*
+      <Text style={styles.subHeader}>Gráfico de Distância</Text>
       {chartData.labels && (
         <LineChart
           data={chartData}
+          fromZero={true}
           width={Dimensions.get("window").width - 20} // Largura do gráfico
           height={220}
           yAxisSuffix="cm"
@@ -131,7 +141,7 @@ export default function App() {
             borderRadius: 16,
           }}
         />
-      )}*/}
+      )}
     </ScrollView>
   );
 }

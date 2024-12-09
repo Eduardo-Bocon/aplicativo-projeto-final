@@ -4,7 +4,7 @@ import axios from "axios";
 import { DataTable } from "react-native-paper";
 import { LineChart } from "react-native-chart-kit";
 
-const BACKEND_URL = "https://768c-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://b43b-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
 
 export default function Explore() {
   const [sensorData, setSensorData] = useState<{ timestamp: string; distance: number }[]>([]);
@@ -64,6 +64,7 @@ export default function Explore() {
         ))}
       </DataTable>
       <Text style={styles.subHeader}>Gráfico de Distância</Text>
+      
       {chartData.labels && (
         <LineChart
           data={chartData}
