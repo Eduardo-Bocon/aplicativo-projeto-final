@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
 
-const BACKEND_URL = "https://b43b-189-4-74-248.ngrok-free.app"; // Substitua pelo URL do backend
+const BACKEND_URL = "https://d6cf-189-4-74-248.ngrok-free.app";
 
 export default function Index() {
-  const [targetDist, setTargetDist] = useState(""); // Estado para o limite
+  const [targetDist, setTargetDist] = useState("");
 
   const updateTargetDist = async () => {
     try {
       await axios.patch(`${BACKEND_URL}/Controle`, {
-        targetDist: Number(targetDist),
+        distancia: Number(targetDist),
       });
       alert("Valor limite atualizado com sucesso!");
-      setTargetDist("");
     } catch (error) {
       console.error("Erro ao atualizar valor limite:", error);
       alert("Erro ao atualizar valor limite.");
@@ -22,46 +21,49 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Controle de Sensor</Text>
+      <Text style={styles.header}>Configuração de Limite</Text>
       <View style={styles.card}>
         <Text style={styles.label}>Alterar valor limite:</Text>
-        <TextInput style={styles.input} placeholder="Novo limite" />
-                  <Button title="Atualizar" onPress={updateTargetDist} />
-                </View>
-              </View>
-            );
-          }
-          
-          const styles = StyleSheet.create({
-            container: {
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 16,
-            },
-            header: {
-              fontSize: 24,
-              marginBottom: 16,
-            },
-            card: {
-              width: "100%",
-              padding: 16,
-              borderRadius: 8,
-              backgroundColor: "#fff",
-              shadowColor: "#000",
-              shadowOpacity: 0.1,
-              shadowRadius: 10,
-              elevation: 5,
-            },
-            label: {
-              fontSize: 18,
-              marginBottom: 8,
-            },
-            input: {
-              height: 40,
-              borderColor: "#ccc",
-              borderWidth: 1,
-              marginBottom: 16,
-              paddingHorizontal: 8,
-            },
-          });
+        <TextInput
+          style={styles.input}
+          placeholder="Novo limite"
+          keyboardType="numeric"
+          value={targetDist}
+          onChangeText={setTargetDist}
+        />
+        <Button title="Atualizar" onPress={updateTargetDist} />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 10,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  card: {
+    backgroundColor: "#f9f9f9",
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+});
